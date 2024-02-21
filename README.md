@@ -1,0 +1,1 @@
+This repository contains MySQL scripts for projects done in ALX Backend Specialization.
