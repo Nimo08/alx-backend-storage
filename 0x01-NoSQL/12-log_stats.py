@@ -13,18 +13,15 @@ collection = db.nginx
 
 total_logs = collection.nginx.count_documents({})
 
-method_counts = {
-    "GET": collection.count_documents({"method": "GET"}),
-    "POST": collection.count_documents({"method": "POST"}),
-    "PUT": collection.count_documents({"method": "PUT"}),
-    "PATCH": collection.count_documents({"method": "PATCH"}),
-    "DELETE": collection.count_documents({"method": "DELETE"})
-}
+methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+method_count = {}
+for method in methods:
+    method_count[method] = collection.count_documents({"method": method})
 status_check_count = collection.count_documents({"method": "GET",
                                                  "path": "/status"})
 print(f"{total_logs} logs")
 print("Methods:")
-for method, count in method_counts.items():
+for method, count in method_count.items():
     print(f"    method {method}: {count}")
 print(f"{status_check_count} status check")
 
