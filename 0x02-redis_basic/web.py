@@ -7,6 +7,7 @@ import redis
 import requests
 from typing import Callable, Any
 from functools import wraps
+redis_instance = redis.Redis()
 
 
 def count_url(func: Callable) -> Callable:
@@ -26,9 +27,6 @@ def count_url(func: Callable) -> Callable:
         redis_instance.setex(url, 10, func(url))
         return func(*args, **kwargs)
     return wrapper
-
-
-redis_instance = redis.Redis(host='localhost', port=6379, db=0)
 
 
 @count_url
