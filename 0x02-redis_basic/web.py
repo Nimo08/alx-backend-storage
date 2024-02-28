@@ -23,9 +23,8 @@ def count_url(func: Callable) -> Callable:
         cached_response = redis_instance.get(url)
         if cached_response:
             return cached_response.decode('utf-8')
-        response = func(*args, **kwargs)
-        redis_instance.setex(url, 10, response)
-        return response
+        redis_instance.setex(url, 10, func(url))
+        return func(*args, **kwargs)
     return wrapper
 
 
