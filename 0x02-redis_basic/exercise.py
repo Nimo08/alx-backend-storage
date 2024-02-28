@@ -43,16 +43,18 @@ def replay(method: Callable) -> None:
     Display the history of calls of a particular function.
     """
     # access redis instance stored in method's object
+    method_name = method.__qualname__
+    input_key = f"{method_name}:inputs"
+    output_key = f"{method_name}:outputs"
     redis_instance = method.__self__._redis
+    num_methods = redis_instance.get(method_name).decode('utf-8')
+    print(f"{method_name} was called {num_methods} times:")
 
-    input_key = f"{method.__qualname__}:inputs"
-    output_key = f"{method.__qualname__}:outputs"
     inputs = redis_instance.lrange(input_key, 0, -1)
     outputs = redis_instance.lrange(output_key, 0, -1)
-    print(f"{method.__qualname__} was called {len(inputs)} times:")
-    for input_data, output_data in zip(inputs, outputs):
-        print(f"{method.__qualname__}(*({input_data.decode()})) -> "
-              f"{output_data.decode()}")
+    for inp_data, out_data in zip(inputs, outputs):
+        inp_val, out_val = inp_data.decode("utf-8"), out_data.decode("utf-8")
+        print(f"{method_name}(*{inp_val}) -> {out_val}")
 
 
 class Cache:
