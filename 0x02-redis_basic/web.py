@@ -9,7 +9,7 @@ from functools import wraps
 redis_instance = redis.Redis()
 
 
-def count(func: Callable) -> Callable:
+def count_url(func: Callable) -> Callable:
     """
     Track how many times a particular URL was accessed
     in the key "count:{url}" and cache the result with an
@@ -24,6 +24,7 @@ def count(func: Callable) -> Callable:
     return wrapper
 
 
+@count_url
 def get_page(url: str) -> str:
     """
     Uses the requests module to obtain the HTML content
